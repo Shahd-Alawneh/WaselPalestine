@@ -7,6 +7,8 @@ import { errorHandler } from "./common/errors/errorHandler";
 import authRoutes from "./modules/auth/auth.routes";
 import alertsRoutes from "./modules/alerts/alerts.routes";
 import routesRoutes from "./modules/routes/routes.routes";
+import checkpointRoutes from "./modules/checkpoints/checkpoints.routes";
+import incidentRoutes from "./modules/incidents/incidents.routes";
 
 dotenv.config();
 
@@ -19,6 +21,9 @@ app.use(morgan("dev"));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/alerts", alertsRoutes);
 app.use("/api/v1/routes", routesRoutes);
+app.use("/api/v1/checkpoints", checkpointRoutes);
+app.use("/api/v1/incidents", incidentRoutes);
+
 app.get("/api/v1/health", (req, res) => {
   res.json({ status: "OK" });
 });
