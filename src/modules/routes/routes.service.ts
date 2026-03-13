@@ -57,7 +57,7 @@ async function loadCheckpointNodeIds(): Promise<Set<string>> {
 
         // Load active checkpoints with lat/lng
         const [rows] = await pool.execute<RowDataPacket[]>(
-            `SELECT latitude, longitude FROM checkpoints WHERE status = 'active'`
+            `SELECT latitude, longitude FROM checkpoints WHERE current_status IN ('closed', 'delayed', 'hazard')`
         );
 
         for (const row of rows as any[]) {
