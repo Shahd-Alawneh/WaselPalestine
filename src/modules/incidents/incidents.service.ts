@@ -1,5 +1,8 @@
 import * as repo from "./incidents.repo";
 import type { CreateIncidentInput, ListIncidentsQuery, UpdateIncidentInput } from "./incidents.validation";
+import { onIncidentVerified } from "../alerts/alerts.service";
+import { getCheckpoint } from "../checkpoints/checkpoints.service";
+import { findNearestNode } from "../routes/routes.graph";
 
 export async function createIncident(input: CreateIncidentInput, actorId: number) {
   const id = await repo.createIncident({ ...input, createdBy: actorId });
@@ -79,7 +82,29 @@ export async function verifyIncident(id: number, actorId: number) {
     throw err;
   }
   await repo.verifyIncident(id, actorId);
-  return repo.getIncidentById(id);
+  const updated = await repo.getIncidentById(id);
+
+  if (updated && updated.checkpoint_id) {
+    try {
+      const cp = await getCheckpoint(updated.checkpoint_id);
+      const lat = Number(cp.latitude);
+      const lng = Number(cp.longitude);
+      const nearest = findNearestNode(lat, lng);
+
+      await onIncidentVerified({
+        incidentId: updated.id,
+        category: updated.type,
+        city: nearest.name,
+        governorate: nearest.governorate,
+        lat,
+        lng,
+      });
+    } catch (err) {
+      console.error("[ALERT_TRIGGER_ERROR]", err);
+    }
+  }
+
+  return updated;
 }
 
 export async function closeIncident(id: number, actorId: number) {
