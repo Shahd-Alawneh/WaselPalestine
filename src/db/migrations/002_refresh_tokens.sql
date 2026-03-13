@@ -1,7 +1,7 @@
 -- 002_refresh_tokens.sql
 CREATE TABLE IF NOT EXISTS refresh_tokens (
   id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id BIGINT UNSIGNED NOT NULL,
+  user_id BIGINT NOT NULL,
   token_hash VARCHAR(255) NOT NULL,
   expires_at DATETIME NOT NULL,
   revoked_at DATETIME NULL,
