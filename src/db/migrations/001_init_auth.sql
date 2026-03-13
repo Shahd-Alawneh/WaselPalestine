@@ -15,15 +15,3 @@ CREATE TABLE IF NOT EXISTS users (
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
-
-CREATE TABLE IF NOT EXISTS refresh_tokens (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT NOT NULL,
-  token_hash VARCHAR(255) NOT NULL,
-  expires_at DATETIME NOT NULL,
-  revoked_at DATETIME NULL,
-  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_refresh_user (user_id),
-  INDEX idx_refresh_expires (expires_at),
-  CONSTRAINT fk_refresh_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
