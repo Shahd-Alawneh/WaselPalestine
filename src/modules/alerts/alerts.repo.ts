@@ -242,3 +242,47 @@ export async function createAlertRecords(
   );
   return res.affectedRows;
 }
+
+export async function getAlertsByUser(
+  userId: number,
+  opts: { page: number; limit: number }
+) {
+  const safePage = Math.max(1, Number(opts.page));
+  const safeLimit = Math.min(100, Math.max(1, Number(opts.limit)));
+  const offset = (safePage - 1) * safeLimit;
+
+  const [countRows] = await pool.execute<RowDataPacket[]>(
+    `
+    SELECT COUNT(*) AS total
+    FROM alerts a
+    JOIN alert_subscriptions s ON s.id = a.subscription_id
+    WHERE s.user_id = ?
+    `,
+    [userId]
+  );
+
+  const total = Number((countRows as any)[0]?.total ?? 0);
+
+  const sql = `
+    SELECT
+      a.id,
+      a.subscription_id,
+      a.incident_id,
+      a.status,
+      a.created_at
+    FROM alerts a
+    JOIN alert_subscriptions s ON s.id = a.subscription_id
+    WHERE s.user_id = ?
+    ORDER BY a.id DESC
+    LIMIT ${safeLimit} OFFSET ${offset}
+  `;
+
+  const [rows] = await pool.execute<RowDataPacket[]>(sql, [userId]);
+
+  return {
+    total,
+    items: rows,
+    page: safePage,
+    limit: safeLimit,
+  };
+}

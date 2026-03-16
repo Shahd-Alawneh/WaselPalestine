@@ -7,11 +7,13 @@ import { onIncidentVerified } from "./alerts.service";
 function getUserId(req: AuthRequest) {
   const sub = req.user?.sub;
   const userId = Number(sub);
+
   if (!sub || !Number.isFinite(userId)) {
     const err: any = new Error("Unauthorized");
     err.status = 401;
     throw err;
   }
+
   return userId;
 }
 
@@ -26,7 +28,6 @@ export async function createSubscription(req: AuthRequest, res: Response) {
 export async function listMySubscriptions(req: AuthRequest, res: Response) {
   const userId = getUserId(req);
 
-  // ✅ تحويل page/limit لأرقام بشكل مضمون
   const page = Number.isFinite(Number(req.query.page)) ? Math.max(1, Number(req.query.page)) : 1;
   const limit = Number.isFinite(Number(req.query.limit)) ? Math.min(100, Math.max(1, Number(req.query.limit))) : 20;
 
@@ -49,24 +50,49 @@ export async function listMySubscriptions(req: AuthRequest, res: Response) {
 export async function updateSubscription(req: AuthRequest, res: Response) {
   const userId = getUserId(req);
   const id = Number(req.params.id);
-  if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid id" });
+
+  if (!Number.isFinite(id)) {
+    return res.status(400).json({ message: "Invalid id" });
+  }
 
   const input = updateSubscriptionSchema.parse(req.body);
   const updated = await service.updateMySubscription(userId, id, input);
+
   res.json({ subscription: updated });
 }
 
 export async function deleteSubscription(req: AuthRequest, res: Response) {
   const userId = getUserId(req);
   const id = Number(req.params.id);
-  if (!Number.isFinite(id)) return res.status(400).json({ message: "Invalid id" });
+
+  if (!Number.isFinite(id)) {
+    return res.status(400).json({ message: "Invalid id" });
+  }
 
   const result = await service.deleteMySubscription(userId, id);
   res.json(result);
 }
 
+/**
+ * NEW: list user alerts
+ */
+export async function listMyAlerts(req: AuthRequest, res: Response) {
+  const userId = getUserId(req);
+
+  const page = Number.isFinite(Number(req.query.page)) ? Math.max(1, Number(req.query.page)) : 1;
+  const limit = Number.isFinite(Number(req.query.limit)) ? Math.min(100, Math.max(1, Number(req.query.limit))) : 20;
+
+  const data = await service.listMyAlerts(userId, { page, limit });
+
+  res.json({
+    page,
+    limit,
+    total: data.total,
+    items: data.items,
+  });
+}
+
 export async function testTrigger(req: AuthRequest, res: Response) {
-  // نخليها ثابتة وبسيطة، وبنفس الوقت قابلة للتعديل من body إذا بدك
   const body = req.body || {};
 
   const incidentId = Number(body.incidentId ?? 999);

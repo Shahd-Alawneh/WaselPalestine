@@ -3,8 +3,7 @@ import * as repo from "./alerts.repo";
 
 export async function createSubscription(userId: number, input: CreateSubscriptionInput) {
   const id = await repo.createSubscription(userId, input);
-  const sub = await repo.findSubscriptionById(id);
-  return sub;
+  return repo.findSubscriptionById(id);
 }
 
 export async function listMySubscriptions(
@@ -34,11 +33,13 @@ export async function listMySubscriptions(
 
 export async function updateMySubscription(userId: number, id: number, input: UpdateSubscriptionInput) {
   const existing = await repo.findSubscriptionById(id);
+
   if (!existing) {
     const err: any = new Error("Subscription not found");
     err.status = 404;
     throw err;
   }
+
   if (Number(existing.user_id) !== Number(userId)) {
     const err: any = new Error("Forbidden");
     err.status = 403;
@@ -51,11 +52,13 @@ export async function updateMySubscription(userId: number, id: number, input: Up
 
 export async function deleteMySubscription(userId: number, id: number) {
   const existing = await repo.findSubscriptionById(id);
+
   if (!existing) {
     const err: any = new Error("Subscription not found");
     err.status = 404;
     throw err;
   }
+
   if (Number(existing.user_id) !== Number(userId)) {
     const err: any = new Error("Forbidden");
     err.status = 403;
@@ -67,12 +70,17 @@ export async function deleteMySubscription(userId: number, id: number) {
 }
 
 /**
- * This is the REQUIRED "trigger" entrypoint:
- * Call this function WHEN an incident becomes VERIFIED.
- *
- * It creates alert records that can later be dispatched using any provider (email/SMS/push).
- *
- * Future integration: implement NotificationProvider and plug it into dispatch.
+ * NEW: list alerts
+ */
+export async function listMyAlerts(
+  userId: number,
+  query: { page: number; limit: number }
+) {
+  return repo.getAlertsByUser(userId, query);
+}
+
+/**
+ * Trigger when incident verified
  */
 export async function onIncidentVerified(params: {
   incidentId: number;
@@ -91,21 +99,20 @@ export async function onIncidentVerified(params: {
   });
 
   const subIds = matchedSubs.map((s) => s.id);
+
   const created = await repo.createAlertRecords(subIds, params.incidentId);
 
-  return { created, matchedSubscriptions: subIds.length };
+  return {
+    created,
+    matchedSubscriptions: subIds.length,
+  };
 }
 
-/**
- * Placeholder for future external notification services.
- * For now, it can be called by a cron/job and just logs.
- */
 export type NotificationProvider = {
   name: string;
   send: (payload: { userId: number; incidentId: number; subscriptionId: number }) => Promise<void>;
 };
 
-// Example provider
 export const ConsoleProvider: NotificationProvider = {
   name: "console",
   async send(payload) {
