@@ -1,19 +1,40 @@
-# dependencies
+# ─── Dependencies ─────────────────────────────────────────────
 node_modules/
 
-# environment variables
+# ─── Environment Variables (VERY IMPORTANT) ──────────────────
 .env
-.env.local
-.env.development
-.env.production
+.env.*
+!.env.example
 
-# logs
+# ─── Build Output ────────────────────────────────────────────
+dist/
+build/
+
+# ─── Logs ────────────────────────────────────────────────────
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+*.log
 
-# build
-dist/
-
-# OS
+# ─── OS Files ────────────────────────────────────────────────
 .DS_Store
+Thumbs.db
+
+# ─── IDE / Editor ────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ─── Docker ─────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ─── Coverage / Testing ──────────────────────────────────────
+coverage/
+
+# ─── Temporary Files ─────────────────────────────────────────
+tmp/
+temp/
+.cache/
+
+# ─── TypeScript ──────────────────────────────────────────────
+*.tsbuildinfo

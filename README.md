@@ -1,70 +1,83 @@
-<<<<<<< HEAD
-#  Wasel Palestine Backend
+# Wasel Palestine Backend
 
 Backend system for **Wasel Palestine** – Advanced Software Engineering Project.
 
 This project provides a scalable and modular backend system for managing:
-- Incidents & Checkpoints
-- Crowdsourced Reports
-- Route Estimation
-- Alerts & Subscriptions
-- Authentication & Authorization
 
-Built with modern backend best practices.
+* Incidents & Checkpoints
+* Crowdsourced Reports
+* Route Estimation
+* Alerts & Subscriptions
+* Authentication & Authorization
 
----
-
-#  Tech Stack
-
-- **Node.js**
-- **Express**
-- **TypeScript**
-- **MySQL (Dockerized)**
-- **Redis (Dockerized)**
-- **JWT Authentication**
-- **Modular Architecture**
+Built using modern backend engineering practices with a focus on scalability, modularity, and maintainability.
 
 ---
 
-#  Project Architecture
+# Tech Stack
 
-The project follows a modular structure for scalability and maintainability.
+* **Node.js**
+* **Express**
+* **TypeScript**
+* **MySQL (Dockerized)**
+* **Redis (Dockerized)**
+* **JWT Authentication**
+* **Modular Architecture**
+
+---
+
+# Project Architecture
+
+The project follows a **feature-based modular architecture**:
 
 ```
 src/
   config/        → environment & app configuration
   db/            → database connection & queries
   common/        → middlewares, error handling, utilities
-  modules/       → feature-based modules (auth, incidents, etc.)
+  modules/       → feature-based modules (auth, incidents, reports, etc.)
   integrations/  → external APIs (weather, routing)
-  jobs/          → background tasks
-  tests/         → unit & e2e tests
+  scripts/       → setup & helper scripts
 ```
 
 Each module contains:
-- routes
-- controller
-- service
-- repository
 
-This ensures clean separation of concerns.
+* routes
+* controller
+* service
+* repository
+
+This ensures clear separation of concerns and scalability.
 
 ---
 
-#  Getting Started
+# Features Implemented
 
-##  Requirements
+* JWT Authentication (Access & Refresh Tokens)
+* Role-Based Authorization (Admin / Moderator / User)
+* Incidents & Checkpoints APIs
+* Reports System (Voting + Moderation)
+* External API Integrations (Weather & Routing)
+* Pagination, Filtering, and Sorting
+* Redis Integration
+* MySQL Database with Docker
+* RESTful Versioned APIs (`/api/v1/...`)
+
+---
+
+# Getting Started
+
+## Requirements
 
 Make sure you have installed:
 
-- Node.js (v20 or higher)
-- Git
-- Docker Desktop
-- VS Code (recommended)
+* Node.js (v20 or higher)
+* Git
+* Docker Desktop
 
 ---
 
-##  Clone the Repository
+## Clone the Repository
 
 ```bash
 git clone https://github.com/Shahd-Alawneh/WaselPalestine.git
@@ -73,7 +86,7 @@ cd WaselPalestine
 
 ---
 
-##  Install Dependencies
+## Install Dependencies
 
 ```bash
 npm install
@@ -81,258 +94,9 @@ npm install
 
 ---
 
-##  Setup Environment Variables
+## Setup Environment Variables
 
-Create a `.env` file in the root directory and copy the contents from `.env.example`.
-
-Example:
-
-```
-PORT=5000
-NODE_ENV=development
-
-DB_HOST=localhost
-DB_PORT=13306
-DB_USER=wasel
-DB_PASSWORD=waselpass
-DB_NAME=wasel_db
-
-JWT_ACCESS_SECRET=change_me_access
-JWT_REFRESH_SECRET=change_me_refresh
-JWT_ACCESS_EXPIRES=15m
-JWT_REFRESH_EXPIRES=7d
-```
-
----
-
-##  Start Docker Services
-
-```bash
-docker compose up -d
-```
-
-This will start:
-- MySQL database
-- Redis server
-
-To verify:
-
-```bash
-docker ps
-```
-
----
-
-##  Run the Development Server
-
-```bash
-npm run dev
-```
-
-Server runs at:
-
-```
-http://localhost:5000
-```
-
-Health check endpoint:
-
-```
-GET /api/v1/health
-```
-
----
-
-#  Authentication System (Planned)
-
-- Register
-- Login
-- JWT Access & Refresh tokens
-- Role-based authorization
-
----
-
-#  Core Modules (Planned)
-
-- Auth Module
-- Users Module
-- Incidents & Checkpoints
-- Crowdsourced Reports
-- Route Estimation
-- Alerts & Subscriptions
-- External Integrations (Weather & Routing APIs)
-
----
-
-#  Docker Setup
-
-Services included:
-
-- MySQL 8.0
-- Redis 7
-
-Database runs on:
-
-```
-localhost:13306
-```
-
-Redis runs on:
-
-```
-localhost:6379
-```
-
----
-
-#  Team Workflow
-
-We follow a feature-branch workflow.
-
-### Do NOT push directly to `main`.
-
-Create a branch:
-
-```bash
-git checkout -b feature/feature-name
-```
-
-Commit clearly:
-
-```bash
-git commit -m "Add register endpoint"
-```
-
-Push branch:
-
-```bash
-git push origin feature/feature-name
-```
-
-Then create a Pull Request.
-
----
-
-#  Current Status
-
- Project structure initialized  
- Docker environment configured  
- MySQL & Redis running  
- Database connection verified  
-
----
-
-#  Engineering Practices
-
-- Modular architecture
-- Environment-based configuration
-- Dockerized services
-- Centralized error handling
-- Secure JWT authentication
-- Scalable structure for future microservices expansion
-
----
-
-#  Contributors
-
-- Shahd Alawneh
-- Yasmeen Khaleel
-- Sewar Diab
-- Loay Suwwan
-
----
-
-#  License
-
-Academic project for Advanced Software Engineering course.
-=======
-#  Wasel Palestine Backend
-
-Backend system for **Wasel Palestine** – Advanced Software Engineering Project.
-
-This project provides a scalable and modular backend system for managing:
-- Incidents & Checkpoints
-- Crowdsourced Reports
-- Route Estimation
-- Alerts & Subscriptions
-- Authentication & Authorization
-
-Built with modern backend best practices.
-
----
-
-#  Tech Stack
-
-- **Node.js**
-- **Express**
-- **TypeScript**
-- **MySQL (Dockerized)**
-- **Redis (Dockerized)**
-- **JWT Authentication**
-- **Modular Architecture**
-
----
-
-#  Project Architecture
-
-The project follows a modular structure for scalability and maintainability.
-
-```
-src/
-  config/        → environment & app configuration
-  db/            → database connection & queries
-  common/        → middlewares, error handling, utilities
-  modules/       → feature-based modules (auth, incidents, etc.)
-  integrations/  → external APIs (weather, routing)
-  jobs/          → background tasks
-  tests/         → unit & e2e tests
-```
-
-Each module contains:
-- routes
-- controller
-- service
-- repository
-
-This ensures clean separation of concerns.
-
----
-
-#  Getting Started
-
-##  Requirements
-
-Make sure you have installed:
-
-- Node.js (v20 or higher)
-- Git
-- Docker Desktop
-- VS Code (recommended)
-
----
-
-##  Clone the Repository
-
-```bash
-git clone https://github.com/Shahd-Alawneh/WaselPalestine.git
-cd WaselPalestine
-```
-
----
-
-##  Install Dependencies
-
-```bash
-npm install
-```
-
----
-
-##  Setup Environment Variables
-
-Create a `.env` file in the root directory and copy the contents from `.env.example`.
-
-Example:
+Create a `.env` file in the root directory:
 
 ```
 PORT=5000
@@ -344,6 +108,9 @@ DB_USER=wasel
 DB_PASSWORD=waselpass
 DB_NAME=wasel_db
 
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+
 JWT_ACCESS_SECRET=change_me_access
 JWT_REFRESH_SECRET=change_me_refresh
 JWT_ACCESS_EXPIRES=15m
@@ -352,17 +119,18 @@ JWT_REFRESH_EXPIRES=7d
 
 ---
 
-##  Start Docker Services
+## Start Docker Services
 
 ```bash
-docker compose up -d
+docker compose up -d mysql redis
 ```
 
 This will start:
-- MySQL database
-- Redis server
 
-To verify:
+* MySQL database (port 3307)
+* Redis server (port 6379)
+
+Verify:
 
 ```bash
 docker ps
@@ -370,7 +138,7 @@ docker ps
 
 ---
 
-##  Run the Development Server
+## Run the Development Server
 
 ```bash
 npm run dev
@@ -382,114 +150,76 @@ Server runs at:
 http://localhost:5000
 ```
 
-Health check endpoint:
+---
+
+# API Example
+
+### Login
 
 ```
-GET /api/v1/health
+POST /api/v1/auth/login
+```
+
+Body:
+
+```json
+{
+  "email": "user@email.com",
+  "password": "Password1234"
+}
 ```
 
 ---
 
-#  Authentication System (Planned)
+# Docker Notes
 
-- Register
-- Login
-- JWT Access & Refresh tokens
-- Role-based authorization
+* MySQL runs on: `localhost:3307`
+* Redis runs on: `localhost:6379`
+* Backend can run:
 
----
-
-#  Core Modules (Planned)
-
-- Auth Module
-- Users Module
-- Incidents & Checkpoints
-- Crowdsourced Reports
-- Route Estimation
-- Alerts & Subscriptions
-- External Integrations (Weather & Routing APIs)
+  * Locally via `npm run dev`
+  * Or via Docker container
 
 ---
 
-#  Docker Setup
+# Security
 
-Services included:
-
-- MySQL 8.0
-- Redis 7
-
-Database runs on:
-
-```
-localhost:3307
-```
-
-Redis runs on:
-
-```
-localhost:6379
-```
+* JWT-based authentication
+* Refresh token support
+* Role-based access control (RBAC)
+* Protected routes using middleware
 
 ---
 
-#  Team Workflow
+# Current Status
 
-We follow a feature-branch workflow.
-
-### Do NOT push directly to `main`.
-
-Create a branch:
-
-```bash
-git checkout -b feature/feature-name
-```
-
-Commit clearly:
-
-```bash
-git commit -m "Add register endpoint"
-```
-
-Push branch:
-
-```bash
-git push origin feature/feature-name
-```
-
-Then create a Pull Request.
+* Backend fully functional
+* Database connected and stable
+* Authentication working
+* Core APIs tested using Postman
+* Docker environment configured
 
 ---
 
-#  Current Status
+# Engineering Practices
 
- Project structure initialized  
- Docker environment configured  
- MySQL & Redis running  
- Database connection verified  
-
----
-
-#  Engineering Practices
-
-- Modular architecture
-- Environment-based configuration
-- Dockerized services
-- Centralized error handling
-- Secure JWT authentication
-- Scalable structure for future microservices expansion
+* Modular architecture
+* Clean separation of layers
+* Environment-based configuration
+* Dockerized infrastructure
+* Scalable backend design
 
 ---
 
-#  Contributors
+# Contributors
 
-- Shahd Alawneh
-- Yasmeen Khaleel
-- Sewar Diab
-- Loay Suwwan
+* Shahd Alawneh
+* Yasmeen Khaleel
+* Sewar Diab
+* Loay Suwwan
 
 ---
 
-#  License
+# License
 
 Academic project for Advanced Software Engineering course.
->>>>>>> origin/main

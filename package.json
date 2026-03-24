@@ -1,12 +1,15 @@
 {
   "name": "waselpalestine",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Wasel Palestine Backend - Advanced Software Engineering Project",
+  "main": "dist/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
-    "migrate": "ts-node-dev --respawn --transpile-only src/scripts/migrate.ts"
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "migrate": "node dist/scripts/migrate.js",
+    "migrate:dev": "ts-node-dev --transpile-only src/scripts/migrate.ts",
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +36,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.3.0",
+    "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"

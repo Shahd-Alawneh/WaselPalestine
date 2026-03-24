@@ -31,10 +31,8 @@ async function recordMigration(name: string) {
  * - ignores empty statements
  */
 function splitSqlStatements(sql: string): string[] {
-  // Remove BOM if exists
   const noBom = sql.replace(/^\uFEFF/, "");
 
-  // Remove line comments starting with --
   const withoutLineComments = noBom
     .split("\n")
     .map((line) => {
@@ -44,20 +42,37 @@ function splitSqlStatements(sql: string): string[] {
     })
     .join("\n");
 
-  // Remove block comments /* ... */
   const withoutComments = withoutLineComments.replace(/\/\*[\s\S]*?\*\//g, "");
 
-  // Split statements by semicolon
   return withoutComments
     .split(";")
     .map((s) => s.trim())
     .filter((s) => s.length > 0);
 }
 
+function resolveMigrationsDir(): string {
+  const candidates = [
+    path.join(process.cwd(), "src", "db", "migrations"),
+    path.join(process.cwd(), "dist", "db", "migrations"),
+    path.join(__dirname, "..", "db", "migrations")
+  ];
+
+  for (const dir of candidates) {
+    if (fs.existsSync(dir)) {
+      return dir;
+    }
+  }
+
+  throw new Error(
+    `Migrations directory not found. Checked: ${candidates.join(", ")}`
+  );
+}
+
 async function run() {
   await ensureMigrationsTable();
 
-  const dir = path.join(process.cwd(), "src", "db", "migrations");
+  const dir = resolveMigrationsDir();
+
   const files = fs
     .readdirSync(dir)
     .filter((f) => f.endsWith(".sql"))
@@ -81,7 +96,6 @@ async function run() {
 
     console.log(`🟡 Applying ${file}...`);
 
-    // Run each statement sequentially
     for (const stmt of statements) {
       await pool.query(stmt);
     }
@@ -90,10 +104,14 @@ async function run() {
     console.log(`✅ Applied ${file}`);
   }
 
+  await pool.end();
   process.exit(0);
 }
 
-run().catch((err) => {
+run().catch(async (err) => {
   console.error("❌ Migration failed:", err);
+  try {
+    await pool.end();
+  } catch {}
   process.exit(1);
 });
