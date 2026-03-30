@@ -33,6 +33,17 @@ app.use("/api/v1/reports", reportsRoutes);
 // External integrations
 app.use("/api/v1/integrations", integrationsRoutes);
 
+/**
+ * @swagger
+ * /api/v1/health:
+ *   get:
+ *     summary: Health check endpoint
+ *     tags: [Health]
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Service is healthy
+ */
 app.get("/api/v1/health", (_req, res) => {
   res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
