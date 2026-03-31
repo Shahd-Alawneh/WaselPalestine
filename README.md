@@ -111,7 +111,7 @@ Backend → Weather API / Routing API / Geocoding API
 ---
 
 # API Design Rationale
-![ERD](docs/WaselPalestine API.postman_collection.json)
+![API](docs/WaselPalestine API.postman_collection.json)
 The API follows RESTful principles:
 
 * Versioned endpoints:
