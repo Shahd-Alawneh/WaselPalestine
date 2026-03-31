@@ -85,7 +85,7 @@ Backend → Weather API / Routing API / Geocoding API
 
 # Database Schema (ERD)
 
-![ERD](docs/erd.png)
+![ERD](docs/waseldbp.png)
 
 ## Main Tables
 
@@ -111,7 +111,7 @@ Backend → Weather API / Routing API / Geocoding API
 ---
 
 # API Design Rationale
-
+![ERD](docs/WaselPalestine API.postman_collection.json)
 The API follows RESTful principles:
 
 * Versioned endpoints:
