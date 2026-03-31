@@ -10,34 +10,44 @@ This project provides a scalable and modular backend system for managing:
 * Alerts & Subscriptions
 * Authentication & Authorization
 
-Built using modern backend engineering practices with a focus on scalability, modularity, and maintainability.
+The system is designed with real-world constraints in mind, focusing on scalability, performance, and maintainability.
 
 ---
 
-# Tech Stack
+# System Overview
 
-* **Node.js**
-* **Express**
-* **TypeScript**
-* **MySQL (Dockerized)**
-* **Redis (Dockerized)**
-* **JWT Authentication**
-* **Modular Architecture**
+Wasel Palestine is a backend system that enables users to:
+
+* Report road incidents and conditions
+* View checkpoint statuses
+* Estimate routes dynamically
+* Receive alerts based on preferences
+
+User roles:
+
+* **User** → submit reports & view data
+* **Moderator/Admin** → verify incidents & manage system
 
 ---
 
-# Project Architecture
+# Architecture
 
-The project follows a **feature-based modular architecture**:
+The system follows a **layered modular architecture**:
 
+```bash
+Client → Routes → Controllers → Services → Repositories → Database
 ```
+
+## Folder Structure
+
+```bash
 src/
-  config/        → environment & app configuration
-  db/            → database connection & queries
-  common/        → middlewares, error handling, utilities
-  modules/       → feature-based modules (auth, incidents, reports, etc.)
-  integrations/  → external APIs (weather, routing)
-  scripts/       → setup & helper scripts
+  config/
+  db/
+  common/
+  modules/
+  integrations/
+  scripts/
 ```
 
 Each module contains:
@@ -47,167 +57,242 @@ Each module contains:
 * service
 * repository
 
-This ensures clear separation of concerns and scalability.
-
 ---
 
-# Features Implemented
+# Architecture Diagram
 
-* JWT Authentication (Access & Refresh Tokens)
-* Role-Based Authorization (Admin / Moderator / User)
-* Incidents & Checkpoints APIs
-* Reports System (Voting + Moderation)
-* External API Integrations (Weather & Routing)
-* Pagination, Filtering, and Sorting
-* Redis Integration
-* MySQL Database with Docker
-* RESTful Versioned APIs (`/api/v1/...`)
+```text
+Client
+   ↓
+Express Routes
+   ↓
+Controllers
+   ↓
+Services (Business Logic)
+   ↓
+Repositories (DB Access)
+   ↓
+MySQL Database
+```
 
----
+External integrations:
 
-# Getting Started
-
-## Requirements
-
-Make sure you have installed:
-
-* Node.js (v20 or higher)
-* Git
-* Docker Desktop
-
----
-
-## Clone the Repository
-
-```bash
-git clone https://github.com/Shahd-Alawneh/WaselPalestine.git
-cd WaselPalestine
+```text
+Backend → Weather API / Routing API / Geocoding API
 ```
 
 ---
 
-## Install Dependencies
+# Database Schema (ERD)
 
-```bash
-npm install
-```
+![ERD](docs/erd.png)
 
----
+## Main Tables
 
-## Setup Environment Variables
+* users
+* reports
+* votes
+* incidents
+* checkpoints
+* checkpoint_status_history
+* alerts
+* alert_subscriptions
+* refresh_tokens
+* moderation_logs
 
-Create a `.env` file in the root directory:
+## Key Relationships
 
-```
-PORT=5000
-NODE_ENV=development
-
-DB_HOST=localhost
-DB_PORT=3307
-DB_USER=wasel
-DB_PASSWORD=waselpass
-DB_NAME=wasel_db
-
-REDIS_HOST=127.0.0.1
-REDIS_PORT=6379
-
-JWT_ACCESS_SECRET=change_me_access
-JWT_REFRESH_SECRET=change_me_refresh
-JWT_ACCESS_EXPIRES=15m
-JWT_REFRESH_EXPIRES=7d
-```
+* User → Reports (1:N)
+* Reports → Votes (1:N)
+* Checkpoints → Incidents (1:N)
+* Users → Subscriptions (1:N)
+* Incidents → Alerts (1:N)
 
 ---
 
-## Start Docker Services
+# API Design Rationale
 
-```bash
-docker compose up -d mysql redis
-```
+The API follows RESTful principles:
 
-This will start:
+* Versioned endpoints:
 
-* MySQL database (port 3307)
-* Redis server (port 6379)
+  ```
+  /api/v1/...
+  ```
 
-Verify:
+* Resource-based structure:
 
-```bash
-docker ps
-```
+  * `/auth`
+  * `/reports`
+  * `/incidents`
+  * `/checkpoints`
+  * `/alerts`
+  * `/routes`
+  * `/integrations`
+
+* Consistent responses:
+
+  ```json
+  {
+    "success": true,
+    "data": {},
+    "message": "optional"
+  }
+  ```
+
+* Pagination & filtering supported
 
 ---
 
-## Run the Development Server
+# Authentication & Security
 
-```bash
-npm run dev
+* JWT Authentication (Access + Refresh tokens)
+* Role-Based Access Control (RBAC)
+* Password hashing (bcrypt)
+* Protected routes
+* Rate limiting
+
+---
+
+# External API Integration
+
+## Weather API
+
+* Provides weather data
+* Used for hazard detection
+
+## Routing API
+
+* Calculates optimal routes
+* Supports avoiding checkpoints
+
+## Geocoding API
+
+* Convert addresses ↔ coordinates
+
+---
+
+# API Documentation
+
+Swagger UI available at:
+
+```
+http://localhost:5000/api-docs
 ```
 
-Server runs at:
+Includes:
+
+* Endpoints
+* Request/response schemas
+* Authentication
+
+---
+
+# Postman Collection
+
+The full API collection is available in:
+
+```
+docs/wasel_postman_collection.json
+```
+
+## How to use
+
+1. Open Postman
+2. Click **Import**
+3. Select the file from `docs/`
+4. Set base URL:
 
 ```
 http://localhost:5000
 ```
 
+5. Start testing endpoints
+
 ---
 
-# API Example
+# Testing Strategy
 
-### Login
+## Postman Testing
 
+* Full API collection created
+* Covers all modules
+
+## Manual Testing
+
+* Role-based access
+* Invalid inputs
+* Edge cases
+
+---
+
+# Performance Testing
+
+Implemented:
+
+* Database indexing
+* Pagination
+* Efficient queries
+* Redis caching
+
+Future work:
+
+* Load testing (k6)
+* Stress testing
+
+---
+
+# Docker Setup
+
+Services:
+
+* MySQL (3307)
+* Redis (6379)
+* Backend
+
+Run:
+
+```bash
+docker compose up --build
 ```
-POST /api/v1/auth/login
+
+---
+
+# Getting Started
+
+## Install
+
+```bash
+npm install
 ```
 
-Body:
+## Run locally
 
-```json
-{
-  "email": "user@email.com",
-  "password": "Password1234"
-}
+```bash
+npm run dev
+```
+
+## Run migrations
+
+```bash
+npm run migrate:dev
 ```
 
 ---
 
-# Docker Notes
+# Environment Variables
 
-* MySQL runs on: `localhost:3307`
-* Redis runs on: `localhost:6379`
-* Backend can run:
-
-  * Locally via `npm run dev`
-  * Or via Docker container
-
----
-
-# Security
-
-* JWT-based authentication
-* Refresh token support
-* Role-based access control (RBAC)
-* Protected routes using middleware
-
----
-
-# Current Status
-
-* Backend fully functional
-* Database connected and stable
-* Authentication working
-* Core APIs tested using Postman
-* Docker environment configured
+See `.env.example`
 
 ---
 
 # Engineering Practices
 
 * Modular architecture
-* Clean separation of layers
-* Environment-based configuration
-* Dockerized infrastructure
-* Scalable backend design
+* Clean code
+* Separation of concerns
+* Dockerized services
+* Scalable design
 
 ---
 

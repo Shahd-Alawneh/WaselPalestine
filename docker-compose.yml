@@ -20,7 +20,7 @@ services:
     container_name: wasel-mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_ROOT_PASSWORD: waselpass
       MYSQL_DATABASE: wasel_db
       MYSQL_USER: wasel
       MYSQL_PASSWORD: waselpass
