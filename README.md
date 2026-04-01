@@ -193,14 +193,16 @@ Includes:
 The full API collection is available in:
 
 ```
-docs/wasel_postman_collection.json
+
+docs/WaselPalestine API.openapi
+
 ```
 
 ## How to use
 
-1. Open Postman
+1. Open API Dog
 2. Click **Import**
-3. Select the file from `docs/`
+3. Select the file from `docs/WaselPalestine API.openapi`
 4. Set base URL:
 
 ```
@@ -213,7 +215,7 @@ http://localhost:5000
 
 # Testing Strategy
 
-## Postman Testing
+## API Dog Testing
 
 * Full API collection created
 * Covers all modules
